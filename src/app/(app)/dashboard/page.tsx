@@ -1,20 +1,20 @@
-"use client";
-
-import { User } from "next-auth";
-import { Message } from "@/models/User";
-import axios, { AxiosError } from "axios";
-import { useForm } from "react-hook-form";
-import { useSession } from "next-auth/react";
-import { Button } from "@/components/ui/button";
-import ApiResponse from "@/types/apiResponse";
-import { Switch } from "@/components/ui/switch";
-import { Loader2, RefreshCcw } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
-import { Separator } from "@/components/ui/separator";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { MessageCard } from "@/components/messageCard";
-import { useState, useCallback, useEffect } from "react";
-import { AcceptMessageSchema } from "@/schemas/acceptMessageSchema";
+'use client';
+import { User } from 'next-auth';
+import { Message } from '@/models/User';
+import axios, { AxiosError } from 'axios';
+import { useForm } from 'react-hook-form';
+import { useSession } from 'next-auth/react';
+import { Button } from '@/components/ui/button';
+import ApiResponse from '@/types/apiResponse';
+import { Switch } from '@/components/ui/switch';
+import { Loader2, RefreshCcw } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
+import { Separator } from '@/components/ui/separator';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { MessageCard } from '@/components/messageCard';
+import { useState, useCallback, useEffect } from 'react';
+import { AcceptMessageSchema } from '@/schemas/acceptMessageSchema';
+import Link from 'next/link';
 
 export default function Dashboard() {
   const { toast } = useToast();
@@ -33,22 +33,20 @@ export default function Dashboard() {
   });
 
   const { watch, setValue, register } = form;
-  const acceptMessages: boolean = watch("acceptMessages");
+  const acceptMessages: boolean = watch('acceptMessages');
 
   const acceptMessagesStatus = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await axios.get<ApiResponse>(`/api/accept-messages`);
-      setValue("acceptMessages", response.data.isAcceptingMessages);
+      setValue('acceptMessages', response.data.isAcceptingMessages);
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       console.error(axiosError.response?.data);
       toast({
-        title: "Error",
-        description:
-          axiosError.response?.data?.message ||
-          "Failed to fetch accept messages status",
-        variant: "destructive",
+        title: 'Error',
+        description: axiosError.response?.data?.message || 'Failed to fetch accept messages status',
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -63,24 +61,23 @@ export default function Dashboard() {
         setMessages(response?.data?.messages || []);
         if (refresh) {
           toast({
-            title: "Messages refreshed",
-            description: "Messages have been refreshed",
+            title: 'Messages refreshed',
+            description: 'Messages have been refreshed',
           });
         }
       } catch (error) {
         const axiosError = error as AxiosError<ApiResponse>;
-        console.error("Error fetching message", axiosError.response?.data);
+        console.error('Error fetching message', axiosError.response?.data);
         toast({
-          title: "Error",
-          description:
-            axiosError.response?.data?.message || "Failed to fetch messages",
-          variant: "destructive",
+          title: 'Error',
+          description: axiosError.response?.data?.message || 'Failed to fetch messages',
+          variant: 'destructive',
         });
       } finally {
         setIsLoading(false);
       }
     },
-    [setMessages, setIsLoading, toast],
+    [setMessages, setIsLoading, toast]
   );
 
   useEffect(() => {
@@ -88,37 +85,41 @@ export default function Dashboard() {
 
     fetchMessages();
     acceptMessagesStatus();
-  }, [
-    session,
-    setIsLoading,
-    fetchMessages,
-    setIsSwitching,
-    acceptMessagesStatus,
-  ]);
+  }, [session, setIsLoading, fetchMessages, setIsSwitching, acceptMessagesStatus]);
 
   const handleSwitchChange = async () => {
     try {
-      const response = await axios.post<ApiResponse>("/api/accept-messages", {
+      const response = await axios.post<ApiResponse>('/api/accept-messages', {
         isAcceptingMessages: !acceptMessages,
       });
-      setValue("acceptMessages", !acceptMessages);
+      setValue('acceptMessages', !acceptMessages);
       toast({
         title: response?.data?.message,
-        variant: "default",
+        variant: 'default',
       });
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast({
-        title: "Error",
-        description:
-          axiosError.response?.data.message ??
-          "Failed to update message status",
-        variant: "destructive",
+        title: 'Error',
+        description: axiosError.response?.data.message ?? 'Failed to update message status',
+        variant: 'destructive',
       });
     }
   };
 
-  if (!session || !session.user) return <></>;
+  if (!session || !session.user) {
+    return (
+      <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl flex flex-col items-center justify-center space-y-4">
+        <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
+        <p className="text-lg">You must be signed in to view this page.</p>
+        <Link href="/sign-in">
+          <Button className="mt-4 inline-block text-white font-bold py-2 px-4 rounded">
+            Sign In
+          </Button>
+        </Link>
+      </div>
+    );
+  }
 
   const { username } = session.user as User;
   const baseUrl = `${window.location.protocol}//${window.location.host}`;
@@ -127,8 +128,8 @@ export default function Dashboard() {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(profileUrl);
     toast({
-      title: "URL Copied!",
-      description: "Profile URL has been copied to clipboard.",
+      title: 'URL Copied!',
+      description: 'Profile URL has been copied to clipboard.',
     });
   };
 
@@ -137,7 +138,7 @@ export default function Dashboard() {
       <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
 
       <div className="mb-4">
-        <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>{" "}
+        <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>{' '}
         <div className="flex items-center">
           <input
             type="text"
@@ -151,14 +152,12 @@ export default function Dashboard() {
 
       <div className="mb-4">
         <Switch
-          {...register("acceptMessages")}
+          {...register('acceptMessages')}
           checked={acceptMessages}
           onCheckedChange={handleSwitchChange}
           disabled={isSwitching}
         />
-        <span className="ml-2">
-          Accept Messages: {acceptMessages ? "ON" : "OFF"}
-        </span>
+        <span className="ml-2">Accept Messages: {acceptMessages ? 'ON' : 'OFF'}</span>
       </div>
       <Separator />
 
