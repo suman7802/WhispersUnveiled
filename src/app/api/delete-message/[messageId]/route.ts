@@ -1,10 +1,10 @@
-import mongoose from 'mongoose';
 import UserModel from '@/models/User';
 import dbConnect from '@/lib/dbConnect';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]/options';
+import { authOptions } from '../../auth/[...nextauth]/options';
 
-export async function GET() {
+export async function DELETE(request: Request, { params }: { params: { messageId: string } }) {
+  const { messageId } = params;
   await dbConnect();
   const session = await getServerSession(authOptions);
   const user = session?.user;
@@ -19,39 +19,35 @@ export async function GET() {
     );
   }
 
-  const userId = new mongoose.Types.ObjectId(user._id);
-
   try {
-    const usersMessages = await UserModel.aggregate([
-      { $match: { _id: userId } },
-      { $unwind: '$messages' },
-      { $sort: { 'messages.createdAt': -1 } },
-      { $group: { _id: '$_id', messages: { $push: '$messages' } } },
-    ]);
+    const deletedMessage = await UserModel.updateOne(
+      { _id: user._id },
+      { $pull: { messages: { _id: messageId } } }
+    );
 
-    if (!user || usersMessages.length === 0) {
+    if (deletedMessage.modifiedCount === 0) {
       return Response.json(
         {
           success: false,
-          message: 'No messages found',
+          message: 'Message not found',
         },
-        { status: 401 }
+        { status: 404 }
       );
     }
 
     return Response.json(
       {
         success: true,
-        messages: usersMessages[0].messages,
+        message: 'Message deleted',
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error('fail to get messages', error);
+    console.error('fail to delete messages', error);
     return Response.json(
       {
         success: false,
-        message: 'fail to get messages',
+        message: 'fail to delete messages',
       },
       { status: 500 }
     );
