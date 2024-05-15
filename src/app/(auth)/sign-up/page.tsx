@@ -2,30 +2,24 @@
 
 import * as z from 'zod';
 import Link from 'next/link';
-import {Loader2} from 'lucide-react';
-import {useForm} from 'react-hook-form';
-import axios, {AxiosError} from 'axios';
-import {useRouter} from 'next/navigation';
-import {useEffect, useState} from 'react';
-import {Input} from '@/components/ui/input';
+import { Loader2 } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import axios, { AxiosError } from 'axios';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { Input } from '@/components/ui/input';
 import ApiResponse from '@/types/apiResponse';
-import {useDebounceValue} from 'usehooks-ts';
-import {Button} from '@/components/ui/button';
-import {useToast} from '@/components/ui/use-toast';
-import {signUpSchema} from '@/schemas/signUpSchema';
-import {zodResolver} from '@hookform/resolvers/zod';
+import { useDebounceValue } from 'usehooks-ts';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
+import { signUpSchema } from '@/schemas/signUpSchema';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
 export default function SignUpForm() {
   const router = useRouter();
-  const {toast} = useToast();
+  const { toast } = useToast();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [username, setUsername] = useDebounceValue('', 300);
@@ -53,9 +47,7 @@ export default function SignUpForm() {
           setUsernameMessage(response.data.message);
         } catch (error) {
           const axiosError = error as AxiosError<ApiResponse>;
-          setUsernameMessage(
-            axiosError.response?.data.message ?? 'Error checking username'
-          );
+          setUsernameMessage(axiosError.response?.data.message ?? 'Error checking username');
         } finally {
           setIsCheckingUsername(false);
         }
@@ -93,9 +85,7 @@ export default function SignUpForm() {
     <div className="flex justify-center items-center min-h-screen bg-gray-800">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
         <div className="text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
-            Join Feedback
-          </h1>
+          <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">Join Whispers</h1>
           <p className="mb-4">Sign up to start your adventure</p>
         </div>
         <Form {...form}>
@@ -103,7 +93,7 @@ export default function SignUpForm() {
             <FormField
               name="username"
               control={form.control}
-              render={({field}) => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <Input
@@ -120,7 +110,8 @@ export default function SignUpForm() {
                         usernameMessage === 'username is available'
                           ? 'text-green-500'
                           : 'text-red-500'
-                      }`}>
+                      }`}
+                    >
                       {usernameMessage}
                     </p>
                   )}
@@ -131,7 +122,7 @@ export default function SignUpForm() {
             <FormField
               name="email"
               control={form.control}
-              render={({field}) => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <Input {...field} name="email" />
@@ -146,7 +137,7 @@ export default function SignUpForm() {
             <FormField
               name="password"
               control={form.control}
-              render={({field}) => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <Input type="password" {...field} name="password" />

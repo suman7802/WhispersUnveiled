@@ -2,26 +2,20 @@
 
 import * as z from 'zod';
 import Link from 'next/link';
-import {signIn} from 'next-auth/react';
-import {useForm} from 'react-hook-form';
-import {useRouter} from 'next/navigation';
-import {Input} from '@/components/ui/input';
-import {Button} from '@/components/ui/button';
-import {useToast} from '@/components/ui/use-toast';
-import {zodResolver} from '@hookform/resolvers/zod';
-import {signInSchema} from '@/schemas/signInSchema';
+import { signIn } from 'next-auth/react';
+import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { signInSchema } from '@/schemas/signInSchema';
 
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
 export default function SignInForm() {
   const router = useRouter();
-  const {toast} = useToast();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
@@ -62,7 +56,7 @@ export default function SignInForm() {
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
-            Welcome Back to Feedback
+            Welcome Back to Whispers Unveiled
           </h1>
           <p className="mb-4">Sign in to continue your conversations</p>
         </div>
@@ -72,7 +66,7 @@ export default function SignInForm() {
             <FormField
               name="identifier"
               control={form.control}
-              render={({field}) => ( 
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email/Username</FormLabel>
                   <Input {...field} />
@@ -84,7 +78,7 @@ export default function SignInForm() {
             <FormField
               name="password"
               control={form.control}
-              render={({field}) => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <Input type="password" {...field} />
