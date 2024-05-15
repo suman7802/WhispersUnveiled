@@ -26,7 +26,7 @@ dev server instances
 [dev server instances](http://localhost:3000)
 
 prod server instances
-[click here](https://feed-back-one.vercel.app)
+[click here](whisper7802.vercel.app)
 
 ## Usage
 
