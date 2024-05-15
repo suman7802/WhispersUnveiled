@@ -1,7 +1,7 @@
 import UserModel from '@/models/User';
 import dbConnect from '@/lib/dbConnect';
-import {getServerSession} from 'next-auth';
-import {authOptions} from '../auth/[...nextauth]/options';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../auth/[...nextauth]/options';
 
 export async function POST(Request: Request) {
   await dbConnect();
@@ -14,29 +14,25 @@ export async function POST(Request: Request) {
         success: false,
         message: 'Unauthorized',
       },
-      {status: 401}
+      { status: 401 }
     );
   }
 
   const userId = user._id;
-  const {isAcceptingMessages} = await Request.json();
+  const { isAcceptingMessages } = await Request.json();
 
   try {
     const user = await UserModel.findByIdAndUpdate(
       userId,
-      {isAcceptingMessages},
-      {new: true}
+      { isAcceptingMessages },
+      { new: true }
     );
 
-    if (!user) {
+    if (!user)
       return Response.json(
-        {
-          success: false,
-          message: 'User not found',
-        },
-        {status: 401}
+        { success: false, message: 'User not found' },
+        { status: 401 }
       );
-    }
 
     return Response.json(
       {
@@ -44,7 +40,7 @@ export async function POST(Request: Request) {
         message: 'Messages status updated successfully',
         user,
       },
-      {status: 200}
+      { status: 200 }
     );
   } catch (error) {
     console.error('fail to update messages status', error);
@@ -53,7 +49,7 @@ export async function POST(Request: Request) {
         success: false,
         message: 'fail to update messages status',
       },
-      {status: 500}
+      { status: 500 }
     );
   }
 }
@@ -69,7 +65,7 @@ export async function GET(Request: Request) {
         success: false,
         message: 'Unauthorized',
       },
-      {status: 401}
+      { status: 401 }
     );
   }
 
@@ -84,7 +80,7 @@ export async function GET(Request: Request) {
           success: false,
           message: 'User not found',
         },
-        {status: 401}
+        { status: 401 }
       );
     }
 
@@ -95,7 +91,7 @@ export async function GET(Request: Request) {
         message: 'User found',
         user,
       },
-      {status: 200}
+      { status: 200 }
     );
   } catch (error) {
     console.error('fail to get user', error);
@@ -104,7 +100,7 @@ export async function GET(Request: Request) {
         success: false,
         message: 'fail to get user',
       },
-      {status: 500}
+      { status: 500 }
     );
   }
 }
