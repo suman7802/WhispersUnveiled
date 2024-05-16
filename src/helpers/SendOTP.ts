@@ -42,8 +42,9 @@ const SendOTP = (email: string, username: string, verifyCode: string): Promise<S
       <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
         <h2 style="color: #f60;">OTP Verification</h2>
         <p>Hello ${username},</p>
+        <p>Thank Your for Registering on <span style="color: #f60;">Whispers Unveiled</span></p>
         <p>Your OTP is:</p>
-        <p style="font-size: 24px; color: #f60;">${verifyCode}</p>
+        <p style="font-weight: bold;">${verifyCode}</p>
         <p>Expiring in 1 Hour...</p>
       </div>
     `,
