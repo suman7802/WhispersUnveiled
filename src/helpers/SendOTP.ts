@@ -44,7 +44,7 @@ const SendOTP = (email: string, username: string, verifyCode: string): Promise<S
         <p>Hello ${username},</p>
         <p>Your OTP is:</p>
         <p style="font-size: 24px; color: #f60;">${verifyCode}</p>
-        <p>Expiring in 3 minutes...</p>
+        <p>Expiring in 1 Hour...</p>
       </div>
     `,
     to: email,
