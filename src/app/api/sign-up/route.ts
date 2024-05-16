@@ -1,7 +1,7 @@
-import bcryptjs from "bcryptjs";
-import UserModel from "@/models/User";
-import dbConnect from "@/lib/dbConnect";
-import sendVerificationEmail from "@/helpers/sendVerificationEmail";
+import bcryptjs from 'bcryptjs';
+import UserModel from '@/models/User';
+import dbConnect from '@/lib/dbConnect';
+import SendOTP from '@/helpers/SendOTP';
 
 export async function POST(request: Request) {
   await dbConnect();
@@ -18,9 +18,9 @@ export async function POST(request: Request) {
       return Response.json(
         {
           success: false,
-          message: "Username already exists",
+          message: 'Username already exists',
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -32,9 +32,9 @@ export async function POST(request: Request) {
         return Response.json(
           {
             success: false,
-            message: "Email already exists",
+            message: 'Email already exists',
           },
-          { status: 400 },
+          { status: 400 }
         );
       } else {
         existingUser.verifyCode = verifyCode;
@@ -44,10 +44,9 @@ export async function POST(request: Request) {
         return Response.json(
           {
             success: true,
-            message:
-              "Verification code sent to your email. Please verify your account first",
+            message: 'Verification code sent to your email. Please verify your account first',
           },
-          { status: 200 },
+          { status: 200 }
         );
       }
     } else {
@@ -62,37 +61,33 @@ export async function POST(request: Request) {
       await newUser.save();
     }
 
-    const emailResponse = await sendVerificationEmail(
-      email,
-      username,
-      verifyCode,
-    );
+    const emailResponse = await SendOTP(email, username, verifyCode);
 
-    if (!emailResponse.success) {
+    if (emailResponse.accepted.includes(email)) {
       return Response.json(
         {
-          success: false,
-          message: emailResponse.message,
+          success: true,
+          message: 'User registered successfully. Please verify your account.',
         },
-        { status: 500 },
+        { status: 201 }
       );
     }
 
     return Response.json(
       {
-        success: true,
-        message: "User registered successfully. Please verify your account.",
+        success: false,
+        message: 'Error sending verification code',
       },
-      { status: 201 },
+      { status: 500 }
     );
   } catch (error) {
-    console.error("Error register user", error);
+    console.error('Error register user', error);
     return Response.json(
       {
         success: false,
-        message: "Error register user",
+        message: 'Error register user',
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
