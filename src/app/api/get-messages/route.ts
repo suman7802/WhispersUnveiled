@@ -32,7 +32,7 @@ export async function GET() {
     if (!user || usersMessages.length === 0) {
       return Response.json(
         {
-          success: true,
+          success: false,
           message: 'No messages found',
         },
         { status: 401 }

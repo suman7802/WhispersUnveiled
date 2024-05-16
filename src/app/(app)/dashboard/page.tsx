@@ -61,7 +61,6 @@ export default function Dashboard() {
         setMessages(response?.data?.messages || []);
         if (refresh) {
           toast({
-            title: 'Messages refreshed',
             description: 'Messages have been refreshed',
           });
         }
@@ -69,9 +68,7 @@ export default function Dashboard() {
         const axiosError = error as AxiosError<ApiResponse>;
         console.error('Error fetching message', axiosError.response?.data);
         toast({
-          title: 'Error',
           description: axiosError.response?.data?.message || 'Failed to fetch messages',
-          variant: 'destructive',
         });
       } finally {
         setIsLoading(false);
